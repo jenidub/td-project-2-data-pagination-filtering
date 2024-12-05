@@ -12,16 +12,50 @@ const studentList = document.querySelector('.student-list')
 const linkList = document.querySelector('.link-list')
 const searchBar = document.querySelector('.searchBar')
 
-// /*
-// Create the `showPage` function
-// This function will create and insert/append the elements needed to display a "page" of nine students
-// */
+/*
+Create the searchBar function:
+This will dynamically insert the search form under the Students h2 element
+*/
+function showSearch() {
+   searchBar.innerHTML = ``
+   const searchBarElement = `
+      <label for="search" class="student-search">
+         <span>Search by name</span>
+         <input id="search" placeholder="Search by name...">
+         <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+      </label>
+   `
+   searchBar.insertAdjacentHTML("beforeend", searchBarElement)
+}
+
+searchBar.addEventListener('keyup', (e) => {
+   let searchText = e.target.value.toLowerCase()
+   console.log("searchText: ", searchText)
+   let filteredList = []
+
+   for (let i = 0; i < data.length; i++) {
+      let studentInfo = data[i]
+      let studentName = `${studentInfo.name.title}. ${studentInfo.name.first} ${studentInfo.name.last}`.toLowerCase()
+      if (studentName.includes(searchText)) {
+         console.log(studentName)
+         filteredList.push(studentInfo)
+      }
+   }
+
+   console.log(filteredList)
+})
+
+/*
+Create the `showPage` function:
+This function will create and insert/append the elements needed to display a "page" of nine students
+*/
 function showPage(pageNumber = 1) {
    studentList.innerHTML = ``
+   showSearch()
+
    // Select the index numbers for the students on that page
    let startIndex = (pageNumber - 1) * PER_PAGE_COUNT
    let endIndex = startIndex + PER_PAGE_COUNT
-   console.log(startIndex, endIndex)
 
    // For loop to create and insert the individual student <li>
    for (let i = startIndex; i < endIndex; i++) {
@@ -42,8 +76,8 @@ function showPage(pageNumber = 1) {
    }
 }
 
-/*
-Create the `addPagination` function
+/* 
+Create the `addPagination` function:
 This function will create and insert/append the elements needed for the pagination buttons
 */
 function addPagination() {
@@ -63,7 +97,12 @@ function addPagination() {
    }
 }
 
-/* Page Button Click Event Handler Function */
+/*
+Page Button Click Event Handler Function
+When the user clicks the button, the 'active' class is moved to the clicked button
+and the page number in the button is passed to the showPage() function
+*/
+
 linkList.addEventListener('click', (e) => {
    const buttonClicked = e.target
    buttonClicked.className = 'active'
