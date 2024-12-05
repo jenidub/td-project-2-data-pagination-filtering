@@ -49,17 +49,14 @@ searchBar.addEventListener('keyup', (e) => {
 Create the `showPage` function:
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
-function showPage(pageNumber = 1) {
+function showPage(studentData) {
    studentList.innerHTML = ``
    showSearch()
 
-   // Select the index numbers for the students on that page
-   let startIndex = (pageNumber - 1) * PER_PAGE_COUNT
-   let endIndex = startIndex + PER_PAGE_COUNT
-
    // For loop to create and insert the individual student <li>
-   for (let i = startIndex; i < endIndex; i++) {
-      let studentInfo = data[i]
+   for (let i = 0; i < studentData.length; i++) {
+
+      let studentInfo = studentData[i]
       let studentCard = `
          <li class="student-item cf">
             <div class="student-details">
@@ -109,9 +106,16 @@ linkList.addEventListener('click', (e) => {
    const buttonActive = linkList.querySelector('.active')
    buttonActive.className = ''
    const pageSelected = buttonClicked.textContent
-   showPage(pageSelected)
+
+   let startIndex = (pageSelected - 1) * PER_PAGE_COUNT
+   let endIndex = (startIndex + PER_PAGE_COUNT)
+   let studentInfo = data.slice(startIndex, endIndex)
+   console.log(studentInfo)
+
+   showPage(studentInfo)
 })
 
 // Call functions
-showPage()
+let firstPageStudents = data.slice(0, PER_PAGE_COUNT)
+showPage(firstPageStudents)
 addPagination()
