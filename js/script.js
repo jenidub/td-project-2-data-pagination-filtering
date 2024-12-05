@@ -16,8 +16,8 @@ const searchBar = document.querySelector('.searchBar')
 Create the searchBar function:
 This will dynamically insert the search form under the Students h2 element
 */
+
 function showSearch() {
-   searchBar.innerHTML = ``
    const searchBarElement = `
       <label for="search" class="student-search">
          <span>Search by name</span>
@@ -37,21 +37,30 @@ searchBar.addEventListener('keyup', (e) => {
       let studentInfo = data[i]
       let studentName = `${studentInfo.name.title}. ${studentInfo.name.first} ${studentInfo.name.last}`.toLowerCase()
       if (studentName.includes(searchText)) {
-         console.log(studentName)
          filteredList.push(studentInfo)
       }
    }
 
-   console.log(filteredList)
+   if (filteredList.length === 0) {
+      let html = `<h3>No results available in the student list</h3>`
+      studentList.innerHTML = ``
+      studentList.insertAdjacentHTML("beforeend", html)
+   } else if (filteredList.length < PER_PAGE_COUNT) {
+      showPage(filteredList)
+   } else {
+      showPage(filteredList.slice(0,PER_PAGE_COUNT + 1))
+   }
+
+   addPagination(filteredList.length)
 })
 
 /*
 Create the `showPage` function:
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
+
 function showPage(studentData) {
    studentList.innerHTML = ``
-   showSearch()
 
    // For loop to create and insert the individual student <li>
    for (let i = 0; i < studentData.length; i++) {
@@ -77,7 +86,9 @@ function showPage(studentData) {
 Create the `addPagination` function:
 This function will create and insert/append the elements needed for the pagination buttons
 */
-function addPagination() {
+
+function addPagination(numberOfStudents) {
+   linkList.innerHTML = ``
    // - how many buttons? divide number of students by page count
    const numberOfPages = Math.ceil(numberOfStudents/PER_PAGE_COUNT)
    // - for loop to create the button elements w/ numberOfStudents
@@ -92,6 +103,7 @@ function addPagination() {
          firstLI.className = 'active'
       }
    }
+   console.log(linkList)
 }
 
 /*
@@ -101,21 +113,26 @@ and the page number in the button is passed to the showPage() function
 */
 
 linkList.addEventListener('click', (e) => {
-   const buttonClicked = e.target
-   buttonClicked.className = 'active'
-   const buttonActive = linkList.querySelector('.active')
-   buttonActive.className = ''
-   const pageSelected = buttonClicked.textContent
-
-   let startIndex = (pageSelected - 1) * PER_PAGE_COUNT
-   let endIndex = (startIndex + PER_PAGE_COUNT)
-   let studentInfo = data.slice(startIndex, endIndex)
-   console.log(studentInfo)
-
-   showPage(studentInfo)
+   /*BUG: Class name is not moving between buttons */
+   if (e.target.tagName === 'BUTTON') {
+      const buttonClicked = e.target
+      buttonClicked.className = 'active'
+      const buttonActive = linkList.querySelector('.active')
+      buttonActive.className = ''
+      const pageSelected = buttonClicked.textContent
+   
+      let startIndex = (pageSelected - 1) * PER_PAGE_COUNT
+      let endIndex = (startIndex + PER_PAGE_COUNT)
+      let studentInfo = data.slice(startIndex, endIndex)
+   
+      showPage(studentInfo)
+   }
 })
 
 // Call functions
 let firstPageStudents = data.slice(0, PER_PAGE_COUNT)
+let totalStudentRecords = data.length
+
 showPage(firstPageStudents)
-addPagination()
+addPagination(totalStudentRecords)
+showSearch()
