@@ -13,7 +13,6 @@ const linkList = document.querySelector('.link-list')
 const searchBar = document.querySelector('.searchBar')
 
 let currentPageView = []
-// let filterOn = false
 
 /*
 Create the searchBar function:
@@ -33,7 +32,6 @@ function showSearch() {
 
 searchBar.addEventListener('keyup', (e) => {
    let searchText = e.target.value.toLowerCase()
-   console.log("searchText: ", searchText)
    let filteredList = []
 
    for (let i = 0; i < data.length; i++) {
@@ -43,8 +41,6 @@ searchBar.addEventListener('keyup', (e) => {
          filteredList.push(studentInfo)
       }
    }
-
-   console.log(filteredList)
 
    if (filteredList.length === 0) {
       let html = `<h3>No results available in the student list</h3>`
@@ -96,21 +92,15 @@ This function will create and insert/append the elements needed for the paginati
 
 function addPagination(numberOfStudents) {
    linkList.innerHTML = ``
-   // - how many buttons? divide number of students by page count
    const numberOfPages = Math.ceil(numberOfStudents/PER_PAGE_COUNT)
-   // - for loop to create the button elements w/ numberOfStudents
    for (let i = 1; i <= numberOfPages; i++) {
-      // => create html markup string for each button with index + 1
       let html = `<li><button>${i}</button></li>`
-      // => insertAdjacentHTML to ul link-list
       linkList.insertAdjacentHTML("beforeend", html)
-      // for button #1: add className active      
       if (i === 1) {
          const firstLI = linkList.querySelector('button')
          firstLI.className = 'active'
       }
    }
-   console.log(linkList)
 }
 
 /*
