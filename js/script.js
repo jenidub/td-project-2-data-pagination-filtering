@@ -113,14 +113,17 @@ and the page number in the button is passed to the showPage() function
 */
 
 linkList.addEventListener('click', (e) => {
-   /*BUG: Class name is not moving between buttons */
+   /*BUG: Class name is not moving between buttons - only backwards */
    if (e.target.tagName === 'BUTTON') {
+      const buttonActive = document.querySelector('.active')
+      buttonActive.classList.remove("active")
+      console.log("buttonActive", buttonActive)
+      
       const buttonClicked = e.target
-      buttonClicked.className = 'active'
-      const buttonActive = linkList.querySelector('.active')
-      buttonActive.className = ''
+      console.log("buttonClicked", buttonClicked)
+      buttonClicked.classList.add("active")
       const pageSelected = buttonClicked.textContent
-   
+
       let startIndex = (pageSelected - 1) * PER_PAGE_COUNT
       let endIndex = (startIndex + PER_PAGE_COUNT)
       let studentInfo = data.slice(startIndex, endIndex)
