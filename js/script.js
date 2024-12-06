@@ -12,6 +12,9 @@ const studentList = document.querySelector('.student-list')
 const linkList = document.querySelector('.link-list')
 const searchBar = document.querySelector('.searchBar')
 
+let currentPageView = []
+// let filterOn = false
+
 /*
 Create the searchBar function:
 This will dynamically insert the search form under the Students h2 element
@@ -41,17 +44,22 @@ searchBar.addEventListener('keyup', (e) => {
       }
    }
 
+   console.log(filteredList)
+
    if (filteredList.length === 0) {
       let html = `<h3>No results available in the student list</h3>`
       studentList.innerHTML = ``
       studentList.insertAdjacentHTML("beforeend", html)
    } else if (filteredList.length < PER_PAGE_COUNT) {
+      filterOn = true
       showPage(filteredList)
    } else {
-      showPage(filteredList.slice(0,PER_PAGE_COUNT + 1))
+      filterOn = true
+      showPage(filteredList.slice(0,PER_PAGE_COUNT))
    }
 
    addPagination(filteredList.length)
+   currentPageView = filteredList
 })
 
 /*
@@ -64,7 +72,6 @@ function showPage(studentData) {
 
    // For loop to create and insert the individual student <li>
    for (let i = 0; i < studentData.length; i++) {
-
       let studentInfo = studentData[i]
       let studentCard = `
          <li class="student-item cf">
@@ -113,21 +120,18 @@ and the page number in the button is passed to the showPage() function
 */
 
 linkList.addEventListener('click', (e) => {
-   /*BUG: Class name is not moving between buttons - only backwards */
    if (e.target.tagName === 'BUTTON') {
       const buttonActive = document.querySelector('.active')
       buttonActive.classList.remove("active")
-      console.log("buttonActive", buttonActive)
-      
+
       const buttonClicked = e.target
-      console.log("buttonClicked", buttonClicked)
       buttonClicked.classList.add("active")
       const pageSelected = buttonClicked.textContent
 
       let startIndex = (pageSelected - 1) * PER_PAGE_COUNT
       let endIndex = (startIndex + PER_PAGE_COUNT)
-      let studentInfo = data.slice(startIndex, endIndex)
-   
+      let studentInfo = currentPageView.slice(startIndex, endIndex)
+      
       showPage(studentInfo)
    }
 })
