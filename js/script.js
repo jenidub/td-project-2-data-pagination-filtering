@@ -8,7 +8,7 @@ const PER_PAGE_COUNT = 9
 const numberOfStudents = data.length
 
 //LIST STATE VARIABLE
-let currentPageView = []
+let currentPageView = data
 
 //APPEND ELEMENTS
 const studentList = document.querySelector('.student-list')
